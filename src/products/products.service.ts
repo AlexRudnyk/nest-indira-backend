@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product, ProductDocument } from './schemas/products.schema';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -21,7 +25,12 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<Product> {
-    return await this.productModel.findById(id);
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format: ${id}`);
+    }
+    const product = await this.productModel.findById(id);
+    if (!product) throw new NotFoundException(`Product with ${id} not found`);
+    return product;
   }
 
   async update(

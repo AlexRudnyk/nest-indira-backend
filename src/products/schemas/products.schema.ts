@@ -22,9 +22,6 @@ export class Product {
 
   @Prop()
   price: number;
-
-  //   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'comment' }] })
-  //   comments: Comment[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
