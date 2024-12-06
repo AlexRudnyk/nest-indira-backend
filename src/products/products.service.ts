@@ -37,12 +37,28 @@ export class ProductsService {
     id: string,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    return await this.productModel.findByIdAndUpdate(id, updateProductDto, {
-      new: true,
-    });
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format: ${id}`);
+    }
+    const updatedProduct = await this.productModel.findByIdAndUpdate(
+      id,
+      updateProductDto,
+      {
+        new: true,
+      },
+    );
+    if (!updatedProduct)
+      throw new NotFoundException(`Product with ${id} not found`);
+    return updatedProduct;
   }
 
   async remove(id: string): Promise<Product> {
-    return await this.productModel.findByIdAndDelete(id);
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format: ${id}`);
+    }
+    const removedProduct = await this.productModel.findByIdAndDelete(id);
+    if (!removedProduct)
+      throw new NotFoundException(`Product with ${id} not found`);
+    return removedProduct;
   }
 }
