@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/users.schema';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { sign } from 'jsonwebtoken';
@@ -23,14 +23,20 @@ export class AuthService {
     const userPhone = await this.userModel.findOne({ phone });
     if (userPhone) throw new ConflictException(`${phone} is already in use`);
 
-    const newUser = new this.userModel(createUserDto);
+    const newUser = new this.userModel({
+      ...createUserDto,
+      role: 'USER',
+      accessToken: null,
+    });
     newUser.setPassword(password);
     return await newUser.save();
   }
 
   async login(loginUserDto: LoginUserDto): Promise<{
     accessToken: string;
-    user: Pick<User, '_id' | 'name' | 'phone' | 'role' | 'email'>;
+    user: Pick<User, 'name' | 'phone' | 'role' | 'email'> & {
+      _id: Types.ObjectId;
+    };
   }> {
     const { email, password } = loginUserDto;
 
@@ -54,12 +60,16 @@ export class AuthService {
     return {
       accessToken,
       user: {
-        _id,
+        _id: _id as Types.ObjectId,
         name,
         phone,
         email,
         role,
       },
     };
+  }
+
+  async logout(id: Types.ObjectId) {
+    await this.userModel.findByIdAndUpdate(id, { accessToken: null });
   }
 }

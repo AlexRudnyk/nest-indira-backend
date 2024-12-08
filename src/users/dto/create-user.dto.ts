@@ -1,4 +1,3 @@
-import { Optional } from '@nestjs/common';
 import {
   IsString,
   IsNotEmpty,
@@ -6,14 +5,11 @@ import {
   IsEnum,
   IsDefined,
   Matches,
+  IsOptional,
 } from 'class-validator';
 import { regex } from 'src/helpers/regex';
 
 export class CreateUserDto {
-  @Optional()
-  @IsString()
-  _id: string;
-
   @IsString()
   @IsDefined({ message: 'Name is required' })
   @IsNotEmpty()
@@ -47,6 +43,7 @@ export class CreateUserDto {
   })
   role: 'USER' | 'ADMIN' = 'USER';
 
+  @IsOptional()
   @IsString()
-  accessToken: string = '';
+  accessToken: string | null = null;
 }

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 import { hashSync, compareSync, genSaltSync } from 'bcryptjs';
 
 export type UserDocument = User & Document;
@@ -9,9 +9,6 @@ export type UserDocument = User & Document;
   timestamps: true,
 })
 export class User {
-  @Prop()
-  _id: Types.ObjectId;
-
   @Prop()
   name: string;
 
