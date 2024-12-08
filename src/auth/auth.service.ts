@@ -1,16 +1,21 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/users.schema';
-import { Request } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { sign } from 'jsonwebtoken';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async register(createUserDto: CreateUserDto, req: Request): Promise<User> {
-    const { phone, email, password } = req.body;
+  async register(createUserDto: CreateUserDto): Promise<User> {
+    const { phone, email, password } = createUserDto;
 
     const userEmail = await this.userModel.findOne({ email });
     if (userEmail) throw new ConflictException(`${email} is already in use`);
@@ -21,5 +26,40 @@ export class AuthService {
     const newUser = new this.userModel(createUserDto);
     newUser.setPassword(password);
     return await newUser.save();
+  }
+
+  async login(loginUserDto: LoginUserDto): Promise<{
+    accessToken: string;
+    user: Pick<User, '_id' | 'name' | 'phone' | 'role' | 'email'>;
+  }> {
+    const { email, password } = loginUserDto;
+
+    const user = await this.userModel.findOne({ email });
+    if (!user || !user.comparePassword(password))
+      throw new UnauthorizedException(
+        'Email or password is wrong or not registered',
+      );
+    const payload = { id: user._id };
+    const accessToken = sign(payload, process.env.ACCESS_SECRET_KEY, {
+      expiresIn: '1d',
+    });
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      user._id,
+      { accessToken },
+      { new: true },
+    );
+
+    const { _id, name, phone, role } = updatedUser;
+    return {
+      accessToken,
+      user: {
+        _id,
+        name,
+        phone,
+        email,
+        role,
+      },
+    };
   }
 }

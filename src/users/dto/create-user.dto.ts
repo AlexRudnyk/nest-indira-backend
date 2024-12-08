@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import {
   IsString,
   IsNotEmpty,
@@ -9,6 +10,10 @@ import {
 import { regex } from 'src/helpers/regex';
 
 export class CreateUserDto {
+  @Optional()
+  @IsString()
+  _id: string;
+
   @IsString()
   @IsDefined({ message: 'Name is required' })
   @IsNotEmpty()
