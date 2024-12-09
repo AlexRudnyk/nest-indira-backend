@@ -4,11 +4,13 @@ import { isValidObjectId, Model } from 'mongoose';
 import { Comment, CommentDocument } from './schemas/comments.schema';
 import { User } from 'src/users/schemas/users.schema';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { Product, ProductDocument } from 'src/products/schemas/products.schema';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    @InjectModel(Product.name) private productModel: Model<ProductDocument>,
   ) {}
 
   async getComments(id: string): Promise<Comment[]> {
@@ -31,6 +33,9 @@ export class CommentsService {
       ...createCommentDto,
       userName: user.name,
       good: id,
+    });
+    await this.productModel.findByIdAndUpdate(id, {
+      $push: { comments: newComment._id },
     });
     return newComment;
   }
