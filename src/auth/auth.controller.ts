@@ -1,16 +1,17 @@
 import {
   Body,
   Controller,
-  Delete,
+  Get,
   HttpCode,
-  Param,
   Post,
+  Req,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { Types } from 'mongoose';
+import { Request } from 'express';
+import { UserWithId } from 'src/types/userWithId';
 
 @Controller('auth')
 export class AuthController {
@@ -32,9 +33,10 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
-  @Delete('logout/:id')
+  @Get('logout')
   @HttpCode(204)
-  logout(@Param('id') id: Types.ObjectId) {
-    return this.authService.logout(id);
+  logout(@Req() req: Request) {
+    const user = req.user as UserWithId;
+    return this.authService.logout(user);
   }
 }

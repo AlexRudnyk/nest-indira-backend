@@ -9,6 +9,7 @@ import { User, UserDocument } from 'src/users/schemas/users.schema';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { sign } from 'jsonwebtoken';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UserWithId } from 'src/types/userWithId';
 
 @Injectable()
 export class AuthService {
@@ -69,7 +70,8 @@ export class AuthService {
     };
   }
 
-  async logout(id: Types.ObjectId) {
-    await this.userModel.findByIdAndUpdate(id, { accessToken: null });
+  async logout(user: UserWithId): Promise<void> {
+    const { _id } = user;
+    await this.userModel.findByIdAndUpdate(_id, { accessToken: null });
   }
 }
