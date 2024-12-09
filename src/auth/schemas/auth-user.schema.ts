@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { hashSync, compareSync, genSaltSync } from 'bcryptjs';
 
 export type UserDocument = User & Document;
@@ -26,6 +26,9 @@ export class User {
 
   @Prop({ default: null })
   accessToken: string;
+
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Product' }] })
+  productsInCart: MongooseSchema.Types.ObjectId[];
 
   setPassword(password: string): void {
     this.password = hashSync(password, genSaltSync(10));

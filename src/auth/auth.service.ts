@@ -76,7 +76,11 @@ export class AuthService {
   ): Promise<
     Omit<
       UserWithId,
-      'password' | 'accessToken' | 'setPassword' | 'comparePassword'
+      | 'password'
+      | 'accessToken'
+      | 'setPassword'
+      | 'comparePassword'
+      | 'productsInCart'
     >
   > {
     const { _id, name, phone, email, role } = user;
