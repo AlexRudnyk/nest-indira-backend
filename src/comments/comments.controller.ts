@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -11,6 +12,7 @@ import {
 import { CommentsService } from './comments.service';
 import { Request } from 'express';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { Schema } from 'mongoose';
 
 @Controller('comments')
 export class CommentsController {
@@ -30,5 +32,10 @@ export class CommentsController {
   ) {
     const user = req.user;
     return this.commentsService.addComment(id, user, createCommentDto);
+  }
+
+  @Delete(':id')
+  removeComment(@Param('id') id: Schema.Types.ObjectId) {
+    return this.commentsService.removeComment(id);
   }
 }

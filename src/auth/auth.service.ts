@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/users.schema';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { sign } from 'jsonwebtoken';
@@ -32,7 +32,7 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto): Promise<{
     accessToken: string;
     user: Pick<User, 'name' | 'phone' | 'role' | 'email'> & {
-      _id: Types.ObjectId;
+      _id: Schema.Types.ObjectId;
     };
   }> {
     const { email, password } = loginUserDto;
@@ -57,7 +57,7 @@ export class AuthService {
     return {
       accessToken,
       user: {
-        _id: _id as Types.ObjectId,
+        _id: _id as Schema.Types.ObjectId,
         name,
         phone,
         email,
