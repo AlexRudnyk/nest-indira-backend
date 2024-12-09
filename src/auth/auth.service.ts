@@ -74,4 +74,22 @@ export class AuthService {
     const { _id } = user;
     await this.userModel.findByIdAndUpdate(_id, { accessToken: null });
   }
+
+  async getCurrent(
+    user: UserWithId,
+  ): Promise<
+    Omit<
+      UserWithId,
+      'password' | 'accessToken' | 'setPassword' | 'comparePassword'
+    >
+  > {
+    const { _id, name, phone, email, role } = user;
+    return {
+      _id,
+      name,
+      phone,
+      email,
+      role,
+    };
+  }
 }

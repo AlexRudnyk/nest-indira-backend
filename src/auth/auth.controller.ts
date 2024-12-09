@@ -39,4 +39,10 @@ export class AuthController {
     const user = req.user as UserWithId;
     return this.authService.logout(user);
   }
+
+  @Get('getCurrent')
+  getCurrent(@Req() req: Request) {
+    const user = req.user as UserWithId;
+    return this.authService.getCurrent(user);
+  }
 }
