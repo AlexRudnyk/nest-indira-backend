@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UsePipes,
@@ -13,6 +14,7 @@ import { CommentsService } from './comments.service';
 import { Request } from 'express';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { Schema } from 'mongoose';
+import { ReplyCommentDto } from './dto/reply-comment.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -37,5 +39,14 @@ export class CommentsController {
   @Delete(':id')
   removeComment(@Param('id') id: Schema.Types.ObjectId) {
     return this.commentsService.removeComment(id);
+  }
+
+  @Patch(':id')
+  @UsePipes(new ValidationPipe())
+  replyComment(
+    @Param('id') id: Schema.Types.ObjectId,
+    @Body() replyCommentDto: ReplyCommentDto,
+  ) {
+    return this.commentsService.replyComment(id, replyCommentDto);
   }
 }
