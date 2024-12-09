@@ -5,18 +5,18 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Schema } from 'mongoose';
-import { User, UserDocument } from 'src/users/schemas/users.schema';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { sign } from 'jsonwebtoken';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UserWithId } from 'src/types/userWithId';
+import { RegisterUserDto } from './dto/register-user.dto';
+import { User, UserDocument } from './schemas/auth-user.schema';
 
 @Injectable()
 export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async register(createUserDto: CreateUserDto): Promise<User> {
-    const { phone, email, password } = createUserDto;
+  async register(registerUserDto: RegisterUserDto): Promise<User> {
+    const { phone, email, password } = registerUserDto;
 
     const userEmail = await this.userModel.findOne({ email });
     if (userEmail) throw new ConflictException(`${email} is already in use`);
@@ -24,7 +24,7 @@ export class AuthService {
     const userPhone = await this.userModel.findOne({ phone });
     if (userPhone) throw new ConflictException(`${phone} is already in use`);
 
-    const newUser = new this.userModel(createUserDto);
+    const newUser = new this.userModel(registerUserDto);
     newUser.setPassword(password);
     return await newUser.save();
   }

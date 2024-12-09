@@ -1,4 +1,4 @@
 import { Schema } from 'mongoose';
-import { User } from 'src/users/schemas/users.schema';
+import { User } from 'src/auth/schemas/auth-user.schema';
 
 export type UserWithId = User & { _id: Schema.Types.ObjectId };

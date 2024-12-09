@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { regex } from 'src/helpers/regex';
 
-export class CreateUserDto {
+export class RegisterUserDto {
   @IsString()
   @IsDefined({ message: 'Name is required' })
   @IsNotEmpty()

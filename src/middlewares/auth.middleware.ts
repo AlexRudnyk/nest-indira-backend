@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 import { Model } from 'mongoose';
-import { User, UserDocument } from 'src/users/schemas/users.schema';
+import { User, UserDocument } from 'src/auth/schemas/auth-user.schema';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {

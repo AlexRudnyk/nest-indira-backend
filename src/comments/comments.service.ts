@@ -6,10 +6,10 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model, Schema } from 'mongoose';
 import { Comment, CommentDocument } from './schemas/comments.schema';
-import { User } from 'src/users/schemas/users.schema';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { Product, ProductDocument } from 'src/products/schemas/products.schema';
 import { ReplyCommentDto } from './dto/reply-comment.dto';
+import { User } from 'src/auth/schemas/auth-user.schema';
 
 @Injectable()
 export class CommentsService {
