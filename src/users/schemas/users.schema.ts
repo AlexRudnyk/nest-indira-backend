@@ -21,10 +21,10 @@ export class User {
   @Prop()
   password: string;
 
-  @Prop()
+  @Prop({ default: 'USER' })
   role: 'USER' | 'ADMIN';
 
-  @Prop()
+  @Prop({ default: null })
   accessToken: string;
 
   setPassword(password: string): void {

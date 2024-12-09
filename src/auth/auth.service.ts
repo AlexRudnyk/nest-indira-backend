@@ -24,11 +24,7 @@ export class AuthService {
     const userPhone = await this.userModel.findOne({ phone });
     if (userPhone) throw new ConflictException(`${phone} is already in use`);
 
-    const newUser = new this.userModel({
-      ...createUserDto,
-      role: 'USER',
-      accessToken: null,
-    });
+    const newUser = new this.userModel(createUserDto);
     newUser.setPassword(password);
     return await newUser.save();
   }

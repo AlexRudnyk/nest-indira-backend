@@ -2,10 +2,8 @@ import {
   IsString,
   IsNotEmpty,
   IsEmail,
-  IsEnum,
   IsDefined,
   Matches,
-  IsOptional,
 } from 'class-validator';
 import { regex } from 'src/helpers/regex';
 
@@ -36,14 +34,4 @@ export class CreateUserDto {
       'Password should be from 8 till 64 symbols and contain at least 1 uppercase letter, 1 number and 1 special symbol from !@#$%^&*',
   })
   password: string;
-
-  @IsString()
-  @IsEnum(['USER', 'ADMIN'], {
-    message: 'Valid role required',
-  })
-  role: 'USER' | 'ADMIN' = 'USER';
-
-  @IsOptional()
-  @IsString()
-  accessToken: string | null = null;
 }
