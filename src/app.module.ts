@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
     ProductsModule,
     UsersModule,
     AuthModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [],
