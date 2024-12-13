@@ -32,7 +32,6 @@ export class AuthMiddleware implements NestMiddleware {
       next();
     } catch (error) {
       if (error instanceof TokenExpiredError) {
-        console.log('Token expired:', error.message);
         res
           .status(401)
           .json({ message: 'Token expired. Please log in again.' });
