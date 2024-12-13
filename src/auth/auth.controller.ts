@@ -5,12 +5,11 @@ import {
   HttpCode,
   Post,
   Req,
-  Res,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { UserWithId } from 'src/types/userWithId';
 import { RegisterUserDto } from './dto/register-user.dto';
 
@@ -30,10 +29,8 @@ export class AuthController {
   login(
     @Body(new ValidationPipe())
     loginUserDto: LoginUserDto,
-    @Res({ passthrough: true })
-    response: Response,
   ) {
-    return this.authService.login(loginUserDto, response);
+    return this.authService.login(loginUserDto);
   }
 
   @Get('logout')

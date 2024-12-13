@@ -10,7 +10,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UserWithId } from 'src/types/userWithId';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { User, UserDocument } from './schemas/auth-user.schema';
-import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -30,10 +29,7 @@ export class AuthService {
     return await newUser.save();
   }
 
-  async login(
-    loginUserDto: LoginUserDto,
-    response: Response,
-  ): Promise<{
+  async login(loginUserDto: LoginUserDto): Promise<{
     accessToken: string;
     user: Pick<User, 'name' | 'phone' | 'role' | 'email'> & {
       _id: Schema.Types.ObjectId;
@@ -58,9 +54,6 @@ export class AuthService {
     );
 
     const { _id, name, phone, role } = updatedUser;
-    response.cookie('access_token', accessToken, {
-      sameSite: 'strict',
-    });
     return {
       accessToken,
       user: {
