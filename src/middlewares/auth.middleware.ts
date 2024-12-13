@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Request, Response, NextFunction } from 'express';
-import { verify } from 'jsonwebtoken';
+import { TokenExpiredError, verify } from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/auth/schemas/auth-user.schema';
 
@@ -31,10 +31,14 @@ export class AuthMiddleware implements NestMiddleware {
       req.user = user;
       next();
     } catch (error) {
-      if (error.message === 'Invalid signature') {
-        error.status = 401;
+      if (error instanceof TokenExpiredError) {
+        console.log('Token expired:', error.message);
+        res
+          .status(401)
+          .json({ message: 'Token expired. Please log in again.' });
+      } else {
+        next(error);
       }
-      next(error);
     }
   }
 }
