@@ -19,10 +19,12 @@ export class AuthService {
     const { phone, email, password } = registerUserDto;
 
     const userEmail = await this.userModel.findOne({ email });
-    if (userEmail) throw new ConflictException(`${email} is already in use`);
+    if (userEmail)
+      throw new ConflictException(`Email ${email} is already in use`);
 
     const userPhone = await this.userModel.findOne({ phone });
-    if (userPhone) throw new ConflictException(`${phone} is already in use`);
+    if (userPhone)
+      throw new ConflictException(`Phone ${phone} is already in use`);
 
     const newUser = new this.userModel(registerUserDto);
     newUser.setPassword(password);
