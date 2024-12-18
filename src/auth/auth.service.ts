@@ -46,7 +46,7 @@ export class AuthService {
       );
     const payload = { id: user._id };
     const accessToken = sign(payload, process.env.ACCESS_SECRET_KEY, {
-      expiresIn: '1m',
+      expiresIn: '1h',
     });
 
     const updatedUser = await this.userModel.findByIdAndUpdate(
