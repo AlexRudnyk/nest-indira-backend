@@ -1,7 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CartItem, CartItemDocument } from './schemas/cart-item.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UserWithId } from 'src/types/userWithId';
 import { User, UserDocument } from 'src/auth/schemas/auth-user.schema';
 import { AddToCartDto } from './dto/add-to-cart.dto';
@@ -31,6 +35,48 @@ export class CartItemService {
     });
 
     return addToCartDto;
+  }
+
+  async increment(id: Types.ObjectId, user: UserWithId): Promise<number> {
+    const foundUser = await this.userModel.findOneAndUpdate(
+      {
+        _id: user._id,
+        'productsInCart._id': id,
+      },
+      {
+        $inc: { 'productsInCart.$.quantity': 1 },
+      },
+      {
+        new: true, // Return the updated document
+      },
+    );
+
+    if (!foundUser || !foundUser.productsInCart.length) {
+      throw new NotFoundException(`Product with ID ${id} not found in cart`);
+    }
+
+    return foundUser.productsInCart[0].quantity;
+  }
+
+  async decrement(id: Types.ObjectId, user: UserWithId): Promise<number> {
+    const foundUser = await this.userModel.findOneAndUpdate(
+      {
+        _id: user._id,
+        'productsInCart._id': id,
+      },
+      {
+        $inc: { 'productsInCart.$.quantity': -1 },
+      },
+      {
+        new: true, // Return the updated document
+      },
+    );
+
+    if (!foundUser || !foundUser.productsInCart.length) {
+      throw new NotFoundException(`Product with ID ${id} not found in cart`);
+    }
+
+    return foundUser.productsInCart[0].quantity;
   }
 
   //   async removeFromCart(
