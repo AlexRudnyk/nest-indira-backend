@@ -33,7 +33,7 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<{
     accessToken: string;
-    user: Pick<User, 'name' | 'phone' | 'role' | 'email'> & {
+    user: Pick<User, 'name' | 'phone' | 'role' | 'email' | 'productsInCart'> & {
       _id: Schema.Types.ObjectId;
     };
   }> {
@@ -55,7 +55,7 @@ export class AuthService {
       { new: true },
     );
 
-    const { _id, name, phone, role } = updatedUser;
+    const { _id, name, phone, role, productsInCart } = updatedUser;
     return {
       accessToken,
       user: {
@@ -64,6 +64,7 @@ export class AuthService {
         phone,
         email,
         role,
+        productsInCart,
       },
     };
   }
@@ -78,20 +79,17 @@ export class AuthService {
   ): Promise<
     Omit<
       UserWithId,
-      | 'password'
-      | 'accessToken'
-      | 'setPassword'
-      | 'comparePassword'
-      | 'productsInCart'
+      'password' | 'accessToken' | 'setPassword' | 'comparePassword'
     >
   > {
-    const { _id, name, phone, email, role } = user;
+    const { _id, name, phone, email, role, productsInCart } = user;
     return {
       _id,
       name,
       phone,
       email,
       role,
+      productsInCart,
     };
   }
 }
