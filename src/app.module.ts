@@ -7,21 +7,23 @@ import {
 import { ProductsModule } from './products/products.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
+// import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { CommentsModule } from './comments/comments.module';
 import { SendEmailModule } from './send-email/send-email.module';
+import { CartItemModule } from './cart-item/cart-item.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.DB_HOST),
     ProductsModule,
-    UsersModule,
+    // UsersModule,
     AuthModule,
     CommentsModule,
     SendEmailModule,
+    CartItemModule,
   ],
   controllers: [],
   providers: [],
