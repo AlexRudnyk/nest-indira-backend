@@ -79,28 +79,26 @@ export class CartItemService {
     return foundUser.productsInCart[0].quantity;
   }
 
-  //   async removeFromCart(
-  //     id: Schema.Types.ObjectId,
-  //     user: UserWithId,
-  //   ): Promise<Schema.Types.ObjectId> {
-  //     if (!isValidObjectId(id)) {
-  //       throw new BadRequestException(`Invalid ID format: ${id}`);
-  //     }
-  //     const foundUser = await this.userModel.findById(user._id);
-  //     const isInCart = foundUser.productsInCart.includes(id);
-  //     if (!isInCart)
-  //       throw new NotFoundException(`Product with id: ${id} is not in cart`);
+  async removeFromCart(
+    id: Types.ObjectId,
+    user: UserWithId,
+  ): Promise<Types.ObjectId> {
+    await this.userModel.findByIdAndUpdate(
+      {
+        _id: user._id,
+        'productsInCart._id': id,
+      },
+      {
+        $pull: { productsInCart: { _id: id } },
+      },
+      { new: true },
+    );
+    return id;
+  }
 
-  //     await this.userModel.findByIdAndUpdate(foundUser._id, {
-  //       $pull: { productsInCart: id },
-  //     });
+  async clearCart(user: UserWithId): Promise<{ message: string }> {
+    await this.userModel.findByIdAndUpdate(user._id, { productsInCart: [] });
 
-  //     return id;
-  //   }
-
-  //   async clearCart(user: UserWithId): Promise<{ message: string }> {
-  //     await this.userModel.findByIdAndUpdate(user._id, { productsInCart: [] });
-
-  //     return { message: 'Cart is cleared' };
-  //   }
+    return { message: 'Cart is cleared' };
+  }
 }

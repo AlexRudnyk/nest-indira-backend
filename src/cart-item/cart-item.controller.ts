@@ -1,18 +1,15 @@
 import {
   Body,
   Controller,
+  Delete,
+  HttpCode,
   Param,
-  // Delete,
-  // Get,
-  // HttpCode,
-  // Param,
   Post,
   Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CartItemService } from './cart-item.service';
-// import { Schema } from 'mongoose';
 import { Request } from 'express';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { Types } from 'mongoose';
@@ -40,16 +37,16 @@ export class CartItemController {
     return this.cartItemService.decrement(id, user);
   }
 
-  // @Delete('removefromcart/:id')
-  // removeFromCart(@Param('id') id: Schema.Types.ObjectId, @Req() req: Request) {
-  //   const user = req.user;
-  //   return this.cartItemService.removeFromCart;
-  // }
+  @Delete(':id')
+  removeFromCart(@Param('id') id: Types.ObjectId, @Req() req: Request) {
+    const user = req.user;
+    return this.cartItemService.removeFromCart(id, user);
+  }
 
-  // @Get()
-  // @HttpCode(204)
-  // clearCart(@Req() req: Request) {
-  //   const user = req.user;
-  //   return this.cartItemService.clearCart();
-  // }
+  @Post('clear')
+  @HttpCode(204)
+  clearCart(@Req() req: Request) {
+    const user = req.user;
+    return this.cartItemService.clearCart(user);
+  }
 }
