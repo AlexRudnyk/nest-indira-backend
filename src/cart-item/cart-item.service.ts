@@ -47,15 +47,23 @@ export class CartItemService {
         $inc: { 'productsInCart.$.quantity': 1 },
       },
       {
-        new: true, // Return the updated document
+        new: true,
       },
     );
 
-    if (!foundUser || !foundUser.productsInCart.length) {
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${user._id} not found`);
+    }
+
+    const updatedProduct = foundUser.productsInCart.find(
+      (product) => product._id.toString() === id.toString(),
+    );
+
+    if (!updatedProduct) {
       throw new NotFoundException(`Product with ID ${id} not found in cart`);
     }
 
-    return foundUser.productsInCart[0].quantity;
+    return updatedProduct.quantity;
   }
 
   async decrement(id: Types.ObjectId, user: UserWithId): Promise<number> {
@@ -68,15 +76,23 @@ export class CartItemService {
         $inc: { 'productsInCart.$.quantity': -1 },
       },
       {
-        new: true, // Return the updated document
+        new: true,
       },
     );
 
-    if (!foundUser || !foundUser.productsInCart.length) {
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${user._id} not found`);
+    }
+
+    const updatedProduct = foundUser.productsInCart.find(
+      (product) => product._id.toString() === id.toString(),
+    );
+
+    if (!updatedProduct) {
       throw new NotFoundException(`Product with ID ${id} not found in cart`);
     }
 
-    return foundUser.productsInCart[0].quantity;
+    return updatedProduct.quantity;
   }
 
   async removeFromCart(
