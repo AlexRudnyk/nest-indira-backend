@@ -19,7 +19,6 @@ import { CartItemModule } from './cart-item/cart-item.module';
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.DB_HOST),
     ProductsModule,
-    // UsersModule,
     AuthModule,
     CommentsModule,
     SendEmailModule,
@@ -37,6 +36,7 @@ export class AppModule implements NestModule {
         { path: 'auth/login', method: RequestMethod.POST },
         { path: 'products', method: RequestMethod.GET },
         { path: 'products/:id', method: RequestMethod.GET },
+        { path: 'order', method: RequestMethod.POST },
       )
       .forRoutes('*');
   }
