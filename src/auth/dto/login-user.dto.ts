@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsEmail, Matches } from 'class-validator';
-import { regex } from 'src/helpers/regex';
+import { regex } from '../../helpers/regex';
 
 export class LoginUserDto {
   @IsEmail()
