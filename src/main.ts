@@ -9,22 +9,22 @@ async function bootstrap() {
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
-  // app.use((req, res, next) => {
-  //   if (req.method === 'OPTIONS') {
-  //     res.header('Access-Control-Allow-Origin', '*');
-  //     res.header(
-  //       'Access-Control-Allow-Methods',
-  //       'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  //     );
-  //     res.header(
-  //       'Access-Control-Allow-Headers',
-  //       'Content-Type, Accept, Authorization',
-  //     );
-  //     res.status(204).send();
-  //   } else {
-  //     next();
-  //   }
-  // });
+  app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header(
+        'Access-Control-Allow-Methods',
+        'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      );
+      res.header(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Accept, Authorization',
+      );
+      res.status(204).send();
+    } else {
+      next();
+    }
+  });
   app.setGlobalPrefix('api');
   await app.listen(process.env.PORT ?? 3001);
 }
