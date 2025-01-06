@@ -1,6 +1,8 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import sgMail from '@sendgrid/mail';
+import * as sgMail from '@sendgrid/mail';
 import { CreateOrderDto } from './dto/create-order.dto';
+
+console.log('SG_MAIL', sgMail);
 
 @Injectable()
 export class SendEmailService implements OnModuleInit {
