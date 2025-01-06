@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as sgMail from '@sendgrid/mail';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
-export class SendEmailService {
-  constructor() {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+export class SendEmailService implements OnModuleInit {
+  onModuleInit() {
+    const apiKey = process.env.SENDGRID_API_KEY;
+    if (!apiKey) {
+      throw new Error('SENDGRID_API_KEY is not set in environment variables');
+    }
+    sgMail.setApiKey(apiKey);
   }
 
   async sendEmail(createOrderDto: CreateOrderDto) {
